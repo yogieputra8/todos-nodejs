@@ -81,7 +81,7 @@ app.delete('/todos/:id', function (req, res) {
   // todos = _.without(todos, _.findWhere(todos, {matchedTodo})) ;
   // res.json(body);
   if (!matchedTodo){
-    res.send(404).json({"errror":"no todo found with that ID!"})
+    res.status(404).json({"errror":"no todo found with that ID!"})
   } else {
     todos = _.without(todos, matchedTodo);
     res.json(matchedTodo);
