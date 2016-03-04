@@ -45,31 +45,15 @@ app.get('/todos', function(req, res) {
 app.get('/todos/:id', function(req, res) {
   var todoId = parseInt(req.params.id, 10);
 
-  var matchedTodo = _.findWhere(todos, {
-    id: todoId
+  db.todo.findById(todoId).then(function (todo) {
+    if (!!todo) {
+      res.json(todo.toJSON());
+    } else {
+      res.status(404).send();
+    }
+  }, function (e){
+    res.status(500).send();
   });
-
-  if (matchedTodo) {
-    res.json(matchedTodo);
-  } else {
-    res.status(404).send();
-  }
-
-
-  // var matchedTodo;
-  //
-  // // Iterate of todo array. find the match
-  // todos.forEach(function (cak){
-  //   if ( todoId === cak.id){
-  //     matchedTodo = cak;
-  //   }
-  // });
-  //
-  // if (matchedTodo){
-  //   res.json(matchedTodo);
-  // } else {
-  //   res.status(404).send();
-  // }
 });
 
 
@@ -77,71 +61,12 @@ app.get('/todos/:id', function(req, res) {
 app.post('/todos', function(req, res) {
   var body = _.pick(req.body, 'description', 'completed'); //req.body;
 
-
-
-  // Todo.create({
-  //   description: 'beli iMac'
-  // }).then(function(todo) {
-  //   // console.log('Finished!');
-  //   // console.log(todo);
-  //   return Todo.create({
-  //     description: 'beli Apple TV'
-  //   });
-  // }).then(function() {
-  //   // return Todo.findById(1)
-  //   return Todo.findAll({
-  //     where: {
-  //       description: {
-  //         $like: '%App%'
-  //       }
-  //     }
-  //   });
-  // }).then(function(todos) {
-  //   if (todos) {
-  //     todos.forEach(function (todo) {
-  //       console.log(todo.toJSON());
-  //     })
-  //   } else {
-  //     console.log('no todo found!');
-  //   }
-  // }).catch(function(e) {
-  //   console.log(e);
-  // });
-
   db.todo.create(body).then(function (todo){
     res.status(200).json(todo.toJSON());
   }, function(e){
     res.status(400).json(e);
   });
-
-
-  //   {
-  //   description: body.description,
-  //   completed: body.completed
-  // }).then(function(todos, e) {
-  //   if (todos) {
-  //     res.status(200).json(todos);
-  //   } else {
-  //     res.status(400).json(e);
-  //   }
-  // });
-
-
-
-  // if (!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length == 0) {
-  //   return res.status(400).send();
-  // }
-  //
-  // body.description = body.description.trim();
-  //
-  // // add ID field
-  // body.id = todoNextId++;
-  //
-  // // push body into array
-  // todos.push(body);
-  //
-  // // console.log('description: ' + body.description);
-  // res.json(body);
+ 
 });
 
 
